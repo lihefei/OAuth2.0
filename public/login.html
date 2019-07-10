@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <form action="">
+            <p><label for="name">用户名</label> <input type="text" id="name" /></p>
+            <p><label for="password">密码</label> <input type="text" id="password" /></p>
+            <button type="button" id="submitBtn">登录</button> <a href="./register.html">注册</a>
+        </form>
+
+        <script>
+            const xhr = new XMLHttpRequest();
+
+            document.getElementById('submitBtn').addEventListener('click', login, false);
+
+            function login() {
+                let data = {
+                    name: document.getElementById('name').value,
+                    pswd: document.getElementById('password').value
+                };
+
+                xhr.open('POST', '/api/login');
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(JSON.stringify(data));
+            }
+        </script>
+    </body>
+</html>
