@@ -7,9 +7,9 @@ const routes = require('./router');
 
 const app = new Koa();
 
-app.use(serve(path.join(__dirname + '/public')));
 app.use(bodyParser());
 app.use(routes);
+app.use(serve(path.join(__dirname + '/public')));
 
 const hostName = require('./libs/getIPAdress'); //本地IP
 const port = 7777; //端口

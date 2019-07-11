@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                font-family: PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Verdana, Roboto, Noto, Helvetica Neue, sans-serif;
+            }
+            li {
+                list-style: none;
+            }
+            ul,
+            li,
+            dd {
+                margin: 0;
+                padding: 0;
+            }
+
+            .c-red {
+                color: red;
+            }
+
+            .application-box {
+                width: 900px;
+                margin: 50px auto;
+                padding: 20px 50px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+            }
+            .application-box ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .application-box ul li {
+                flex-basis: 48%;
+            }
+
+            .application-box h2 {
+                color: #333;
+                text-align: center;
+            }
+
+            .application-box dl,
+            .application-box .btn-add {
+                margin: 15px 0;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background-color: #fdfdfd;
+            }
+            .application-box dl dt {
+                position: relative;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            .application-box dt time {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                color: #999;
+                font-size: 12px;
+            }
+
+            .application-box dl dd {
+                color: #666;
+            }
+
+            .application-box .btn-add {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 32px;
+                line-height: 76px;
+                color: #bbb;
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+            .add-box {
+                width: 100%;
+                padding: 20px 50px;
+            }
+
+            .add-box p {
+                padding: 10px;
+            }
+            .add-box label {
+                display: inline-block;
+                width: 120px;
+                padding-right: 10px;
+                text-align: right;
+            }
+
+            .add-box input,
+            .add-box textarea {
+                width: 230px;
+                padding: 5px;
+                border: 1px solid #ddd;
+                line-height: 1.8;
+                outline: none;
+                vertical-align: middle;
+            }
+
+            .add-box button,
+            .add-box a {
+                display: inline-block;
+                width: 106px;
+                padding: 10px 0;
+                border: 0;
+                font-size: 14px;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            .add-box button {
+                color: #fff;
+                background-color: rgb(55, 129, 249);
+                cursor: pointer;
+            }
+
+            .add-box a {
+                color: #666;
+                background-color: #eee;
+                cursor: pointer;
+            }
+
+            .dialog {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .dialog-container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 1;
+                width: 500px;
+                border-radius: 4px;
+                background-color: #fff;
+                transform: translate(-50%, -50%);
+            }
+            .dialog-header {
+                padding: 15px 20px;
+                border-bottom: 1px solid #ddd;
+            }
+            .dialog-title {
+                margin: 0;
+            }
+            .dialog-close {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 57px;
+                height: 57px;
+                font-size: 24px;
+                color: #666;
+                cursor: pointer;
+            }
+        </style>
+        <div id="app">
+            <div class="application-box">
+                <h2>应用列表</h2>
+                <ul>
+                    <li v-for="item in list">
+                        <dl>
+                            <dt>
+                                {{ item.name }} <time>{{ item.createTime }}</time>
+                            </dt>
+                            <dd>client_id: {{ item.client_id }}</dd>
+                            <dd>client_secret: {{ item.client_secret }}</dd>
+                        </dl>
+                    </li>
+
+                    <li>
+                        <a class="btn-add" @click="showDialog = true">╋</a>
+                    </li>
+                </ul>
+            </div>
+            <div v-show="showDialog" class="dialog">
+                <div class="dialog-container">
+                    <div class="dialog-header">
+                        <h3 class="dialog-title">添加应用</h3>
+                        <span class="dialog-close" @click="showDialog = false">&times;</span>
+                    </div>
+                    <div class="dialog-co">
+                        <div class="add-box">
+                            <form action="">
+                                <p>
+                                    <label for="name"><span class="c-red">*</span>应用名称</label> <input type="text" id="name" v-model="name" />
+                                </p>
+                                <p><label for="description">描述</label> <textarea id="description" v-model="description"></textarea></p>
+                                <p><label></label> <button type="button" @click="save">保存</button>&emsp;<a @click="showDialog = false">取消</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+        <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
+        <script>
+            const vm = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        list: [
+                            // {
+                            //     name: '途强',
+                            //     clientId: '121212121',
+                            //     clientSecret: 'dfsdfdsfdsf',
+                            //     createTime: '2014/10/10 08:11:11'
+                            // },
+                            // {
+                            //     name: '风控',
+                            //     clientId: 'fdsafdsafdasf',
+                            //     clientSecret: 'fsdfsdfdsfdsfg',
+                            //     createTime: '2014/10/10 08:11:11'
+                            // }
+                        ],
+                        showDialog: false,
+                        name: '',
+                        description: ''
+                    };
+                },
+                created() {
+                    this.update();
+                },
+                methods: {
+                    save() {
+                        const that = this;
+                        if (!that.name) {
+                            alert('名称不能为空');
+                            return;
+                        }
+                        axios
+                            .post('/api/application/add', {
+                                name: that.name,
+                                description: that.description,
+                                createTime: moment().format('YYYY/MM/DD hh:mm:ss')
+                            })
+                            .then(function(response) {
+                                console.log(response);
+                                alert('保存成功');
+                                that.name = '';
+                                that.description = '';
+                                that.update();
+                                that.showDialog = false;
+                            });
+                    },
+                    update() {
+                        const that = this;
+                        axios
+                            .get('/api/application/list')
+                            .then(function(response) {
+                                that.list = JSON.parse(response.data.data);
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                            })
+                            .finally(function() {
+                                // always executed
+                            });
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
