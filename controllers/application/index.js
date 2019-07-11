@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const md5 = require('md5');
+const moment = require('moment');
+const Utils = require('../../libs/utils');
 
 /**
  * 读取json文件
@@ -38,6 +41,23 @@ function writeFile(filePath, content) {
     });
 }
 
+/**
+ * id递归去重
+ * @param {Stirng} id 创建的id
+ * @param {Array} list 数据库中的id列表
+ * @returns {Stirng} 返回唯一id
+ */
+function filterRepeatId(id, list) {
+    let resultId = id;
+    for (let i = 0; i < list.length; i++) {
+        if (id === list[i].client_id) {
+            resultId = filterRepeatId(Utils.createUniqueId(20), list);
+            return resultId;
+        }
+    }
+    return resultId;
+}
+
 class ApplicationController {
     /**
      *查询应用列表
@@ -71,23 +91,30 @@ class ApplicationController {
         } else {
             const requestResult = Object.assign({}, ctx.request.body);
             const key = 'ABC';
-            requestResult.client_id = requestResult.name + key;
-            requestResult.client_secret = requestResult.name + key + key;
-            console.log(readResult);
 
             const list = JSON.parse(readResult.data);
+
+            let id = filterRepeatId(Utils.createUniqueId(20), list);
+            requestResult.client_id = id;
+            requestResult.client_secret = md5(id + key);
+            requestResult.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
             list.push(requestResult);
 
             const writeContent = JSON.stringify(list);
 
-            const writeResult = await writeFile(filePath, writeContent);
-            if (writeResult.err) {
-                response.code = 1002;
-                response.msg = writeResult.err;
+            if (writeContent === '[]') {
+                response.code = 1005;
+                response.msg = '保存失败';
+            } else {
+                const writeResult = await writeFile(filePath, writeContent);
+                if (writeResult.err) {
+                    response.code = 1002;
+                    response.msg = writeResult.err;
+                }
+                response.code = 0;
+                response.msg = '保存成功';
             }
-
-            response.code = 0;
-            response.msg = '保存成功';
         }
 
         ctx.body = response;

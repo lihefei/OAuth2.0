@@ -2,7 +2,7 @@ const path = require('path');
 const Koa = require('koa');
 const serve = require('koa-static');
 const bodyParser = require('koa-bodyparser'); //post解析
-const router = require('koa-router')();
+//const router = require('koa-router')();
 const routes = require('./router');
 
 const app = new Koa();

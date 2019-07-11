@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Document</title>
+        <title>公共平台登录</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -74,16 +74,30 @@
         <div class="login-box">
             <h2>公共平台登录</h2>
             <form action="">
-                <p><label for="name">用户名</label> <input type="text" id="name" /></p>
-                <p><label for="password">密码</label> <input type="text" id="password" /></p>
-                <p><label></label> <button type="button" id="submitBtn">登录</button>&emsp;<a href="./register.html">立即注册</a></p>
+                <p>
+                    <label for="name">用户名</label>
+                    <input type="text" id="name" />
+                </p>
+                <p>
+                    <label for="password">密码</label>
+                    <input type="text" id="password" />
+                </p>
+                <p>
+                    <label></label>
+                    <button type="button" id="submitBtn">登录</button>&emsp;<a
+                        href="./register.html"
+                        >立即注册</a
+                    >
+                </p>
             </form>
         </div>
 
         <script>
             const xhr = new XMLHttpRequest();
 
-            document.getElementById('submitBtn').addEventListener('click', login, false);
+            document
+                .getElementById('submitBtn')
+                .addEventListener('click', login, false);
 
             function login() {
                 let data = {
@@ -106,7 +120,7 @@
                             if (result.code == 0) {
                                 alert('登录成功');
                                 console.log('登录成功');
-                                window.location.href = './application.html?token=' + result.token;
+                                window.location.href = './application.html';
                             } else {
                                 alert(result.msg);
                             }

@@ -81,7 +81,9 @@ class userController {
             let flag = false;
             for (let i = 0; i < userList.length; i++) {
                 console.log(userList[i].name, userList[i].pswd);
-                console.log(userList[i].name === name && userList[i].pswd === pswd);
+                console.log(
+                    userList[i].name === name && userList[i].pswd === pswd
+                );
 
                 if (userList[i].name === name && userList[i].pswd === pswd) {
                     flag = true;
@@ -96,6 +98,64 @@ class userController {
                 response.code = 0;
                 response.msg = '登录成功';
                 response.token = 'xxxxxxxxxx';
+            }
+        }
+
+        ctx.body = response;
+    }
+
+    static async getAppName(ctx) {
+        const filePath = path.resolve(__dirname, '../../data/authorize.json');
+        const readResult = await readFile(filePath);
+        let response = {};
+        if (readResult.err) {
+            response.code = 1001;
+            response.msg = readResult.err;
+        } else {
+            const tokenList = JSON.parse(readResult.data);
+            const token = ctx.request.body.token;
+            const clientId = '';
+
+            for (let i = 0; i < tokenList.length; i++) {
+                if (tokenList[i].token === token) {
+                    clientId = tokenList[i].client_id;
+                    break;
+                }
+            }
+
+            if (!clientId) {
+                response.code = 1004;
+                response.msg = 'token未注册或已过期';
+            } else {
+                const appFilePath = path.resolve(
+                    __dirname,
+                    '../../data/application.json'
+                );
+                const readAppResult = await readFile(appFilePath);
+
+                if (readAppResult.err) {
+                    response.code = 1001;
+                    response.msg = readResult.err;
+                } else {
+                    const appList = JSON.parse(readAppResult.data);
+                    const appName = '';
+
+                    for (let i = 0; i < appList.length; i++) {
+                        if (appList[i].client_id === clientId) {
+                            appName = appList[i].appName;
+                            break;
+                        }
+                    }
+
+                    if (!appName) {
+                        response.code = 1004;
+                        response.msg = '应用不存在';
+                    } else {
+                        response.code = 0;
+                        response.msg = '获取应用名称成功';
+                        response.appName = appName;
+                    }
+                }
             }
         }
 

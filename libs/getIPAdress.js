@@ -5,8 +5,7 @@ function getLocalIP() {
     let ip = '';
     if (osType === 'Windows_NT') {
         for (let dev in netInfo) {
-
-            if (dev === '本地连接') {
+            if (dev === '本地连接' || dev === 'WLAN') {
                 for (let j = 0; j < netInfo[dev].length; j++) {
                     if (netInfo[dev][j].family === 'IPv4') {
                         ip = netInfo[dev][j].address;
@@ -15,12 +14,10 @@ function getLocalIP() {
                 }
             }
         }
-
     } else if (osType === 'Linux') {
         ip = netInfo.eth0[0].address;
     }
 
     return ip;
-
 }
 module.exports = getLocalIP();

@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Document</title>
+        <title>公共平台应用</title>
     </head>
     <body>
         <style>
@@ -12,7 +12,9 @@
                 box-sizing: border-box;
             }
             body {
-                font-family: PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Verdana, Roboto, Noto, Helvetica Neue, sans-serif;
+                font-family: PingFang SC, Hiragino Sans GB, Arial,
+                    Microsoft YaHei, Verdana, Roboto, Noto, Helvetica Neue,
+                    sans-serif;
             }
             li {
                 list-style: none;
@@ -29,7 +31,7 @@
             }
 
             .application-box {
-                width: 900px;
+                width: 980px;
                 margin: 50px auto;
                 padding: 20px 50px;
                 border: 1px solid #ccc;
@@ -75,6 +77,7 @@
             }
 
             .application-box dl dd {
+                font-size: 14px;
                 color: #666;
             }
 
@@ -138,12 +141,17 @@
             }
 
             .dialog {
+                display: none;
                 position: fixed;
                 top: 0;
                 right: 0;
                 bottom: 0;
                 left: 0;
                 background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .dialog-show {
+                display: block;
             }
 
             .dialog-container {
@@ -184,10 +192,16 @@
                     <li v-for="item in list">
                         <dl>
                             <dt>
-                                {{ item.name }} <time>{{ item.createTime }}</time>
+                                {{ item.appName }}
+                                <time>{{ item.createTime }}</time>
                             </dt>
-                            <dd>client_id: {{ item.client_id }}</dd>
-                            <dd>client_secret: {{ item.client_secret }}</dd>
+                            <dd>
+                                <strong>client_id: </strong>{{ item.client_id }}
+                            </dd>
+                            <dd>
+                                <strong>client_secret: </strong>
+                                {{ item.client_secret }}
+                            </dd>
                         </dl>
                     </li>
 
@@ -196,20 +210,43 @@
                     </li>
                 </ul>
             </div>
-            <div v-show="showDialog" class="dialog">
+            <div class="dialog" :class="{'dialog-show': showDialog}">
                 <div class="dialog-container">
                     <div class="dialog-header">
                         <h3 class="dialog-title">添加应用</h3>
-                        <span class="dialog-close" @click="showDialog = false">&times;</span>
+                        <span class="dialog-close" @click="showDialog = false"
+                            >&times;</span
+                        >
                     </div>
                     <div class="dialog-co">
                         <div class="add-box">
                             <form action="">
                                 <p>
-                                    <label for="name"><span class="c-red">*</span>应用名称</label> <input type="text" id="name" v-model="name" />
+                                    <label for="appName"
+                                        ><span class="c-red">*</span
+                                        >应用名称</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="appName"
+                                        v-model="appName"
+                                    />
                                 </p>
-                                <p><label for="description">描述</label> <textarea id="description" v-model="description"></textarea></p>
-                                <p><label></label> <button type="button" @click="save">保存</button>&emsp;<a @click="showDialog = false">取消</a></p>
+                                <p>
+                                    <label for="description">描述</label>
+                                    <textarea
+                                        id="description"
+                                        v-model="description"
+                                    ></textarea>
+                                </p>
+                                <p>
+                                    <label></label>
+                                    <button type="button" @click="save">
+                                        保存</button
+                                    >&emsp;<a @click="showDialog = false"
+                                        >取消</a
+                                    >
+                                </p>
                             </form>
                         </div>
                     </div>
@@ -224,22 +261,9 @@
                 el: '#app',
                 data() {
                     return {
-                        list: [
-                            // {
-                            //     name: '途强',
-                            //     clientId: '121212121',
-                            //     clientSecret: 'dfsdfdsfdsf',
-                            //     createTime: '2014/10/10 08:11:11'
-                            // },
-                            // {
-                            //     name: '风控',
-                            //     clientId: 'fdsafdsafdasf',
-                            //     clientSecret: 'fsdfsdfdsfdsfg',
-                            //     createTime: '2014/10/10 08:11:11'
-                            // }
-                        ],
+                        list: [],
                         showDialog: false,
-                        name: '',
+                        appName: '',
                         description: ''
                     };
                 },
@@ -249,20 +273,19 @@
                 methods: {
                     save() {
                         const that = this;
-                        if (!that.name) {
+                        if (!that.appName) {
                             alert('名称不能为空');
                             return;
                         }
                         axios
                             .post('/api/application/add', {
-                                name: that.name,
-                                description: that.description,
-                                createTime: moment().format('YYYY/MM/DD hh:mm:ss')
+                                appName: that.appName,
+                                description: that.description
                             })
                             .then(function(response) {
                                 console.log(response);
                                 alert('保存成功');
-                                that.name = '';
+                                that.appName = '';
                                 that.description = '';
                                 that.update();
                                 that.showDialog = false;
