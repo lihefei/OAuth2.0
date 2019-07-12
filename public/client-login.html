@@ -75,7 +75,7 @@
             <h2>第三方平台登录</h2>
             <form action="">
                 <p>
-                    <label for="name">用户名</label>
+                    <label for="name">帐号</label>
                     <input type="text" id="name" />
                 </p>
                 <p>
@@ -84,10 +84,7 @@
                 </p>
                 <p>
                     <label></label>
-                    <button type="button" id="submitBtn">登录</button>&emsp;<a
-                        href="./register.html"
-                        >立即注册</a
-                    >
+                    <button type="button" id="submitBtn">登录</button>&emsp;<a href="./register.html">立即注册</a>
                 </p>
             </form>
         </div>
@@ -95,9 +92,7 @@
         <script>
             const xhr = new XMLHttpRequest();
 
-            document
-                .getElementById('submitBtn')
-                .addEventListener('click', login, false);
+            document.getElementById('submitBtn').addEventListener('click', login, false);
 
             function login() {
                 let data = {
@@ -109,7 +104,7 @@
                     return;
                 }
 
-                xhr.open('POST', '/api/login');
+                xhr.open('POST', '/api/user/login');
                 xhr.setRequestHeader('Content-type', 'application/json');
                 xhr.send(JSON.stringify(data));
                 xhr.onreadystatechange = function() {
@@ -120,7 +115,7 @@
                             if (result.code == 0) {
                                 alert('登录成功');
                                 console.log('登录成功');
-                                window.location.href = './client-index.html';
+                                window.location.href = './client-index.html?user=' + data.name;
                             } else {
                                 alert(result.msg);
                             }

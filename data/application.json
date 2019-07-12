@@ -1,16 +1,1 @@
-[
-    {
-        "appName": "途强",
-        "description": "",
-        "createTime": "2019/07/12 12:22:55",
-        "client_id": "3gwyuf0slaw02sfa848n",
-        "client_secret": "f18229f176a57e86f6d96246c09ec01a"
-    },
-    {
-        "appName": "test",
-        "description": "",
-        "client_id": "t9mg4dwhjjjqj73ycfq0",
-        "client_secret": "12eab1f61003f4501182ff6d55948ee6",
-        "createTime": "2019-07-12 00:42:29"
-    }
-]
+[{"appName":"哈哈","user":"test","client_id":"avmhqzq4m6y6nrotzwqp","client_secret":"1a4a44e78ea7f8f9b8bd92cb21552fba","createTime":"2019-07-12 22:55:36"}]

@@ -8,12 +8,19 @@
     </head>
     <body>
         <div id="app">
-            <p>token： {{ token }}</p>
-
-            <button type="button" @click="getAppname">
-                测试带token获取数据
-            </button>
-            <input type="text" v-model="appName" />
+            <form style="border: 1px solid #aaa; padding: 20px;">
+                <p>帐号: <input type="text" v-model="user" /></p>
+                <p>密码: <input type="text" v-model="pswd" /></p>
+                <p>client_id: <input type="text" v-model="clientId" size="30" /></p>
+                <p>client_secret: <input type="text" v-model="clientSecret" size="30" /></p>
+                <p><button type="button" @click="getToken">获取token</button> <button type="reset">清空</button></p>
+                <textarea type="text" v-model="token" rows="5" cols="50"></textarea>
+            </form>
+            <p></p>
+            <p>
+                <button type="button" @click="getAppname">获取应用名</button>
+                <input type="text" v-model="appName" />
+            </p>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -24,39 +31,25 @@
                 data() {
                     return {
                         token: '',
-                        appName: ''
+                        appName: '',
+                        user: '',
+                        pswd: '123',
+                        clientId: 'avmhqzq4m6y6nrotzwqp',
+                        clientSecret: '1a4a44e78ea7f8f9b8bd92cb21552fba'
                     };
                 },
                 created() {
-                    const that = this;
-                    axios
-                        .post('/api/token', {
-                            name: 'test',
-                            pswd: '123',
-                            grant_type: 'password',
-                            client_id: '3gwyuf0slaw02sfa848n',
-                            client_secret: 'f18229f176a57e86f6d96246c09ec01a'
-                        })
-                        .then(function(response) {
-                            console.log(response);
-                            alert('获取成功');
-                            that.token = response.data.token;
-                        })
-                        .catch(function(error) {
-                            console.log(error);
-                        })
-                        .finally(function() {
-                            // always executed
-                        });
+                    this.user = this.getParam('user');
                 },
                 methods: {
                     getAppname() {
+                        const that = this;
                         axios
-                            .get('/api/getAppName?token=' + this.token)
+                            .get('/api/user/getAppName?token=' + this.token)
                             .then(function(response) {
+                                that.appName = response.data.data.appName;
                                 console.log(response);
                                 alert('获取成功');
-                                that.appName = response.data.getAppName;
                             })
                             .catch(function(error) {
                                 console.log(error);
@@ -64,6 +57,38 @@
                             .finally(function() {
                                 // always executed
                             });
+                    },
+                    getToken() {
+                        const that = this;
+                        axios
+                            .post('/api/authorize/token', {
+                                name: that.user,
+                                pswd: that.pswd,
+                                grant_type: 'password',
+                                client_id: that.clientId,
+                                client_secret: that.clientSecret
+                            })
+                            .then(function(response) {
+                                that.token = response.data.token;
+                                console.log(response);
+                                alert(response.data.msg);
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                            })
+                            .finally(function() {
+                                // always executed
+                            });
+                    },
+                    getParam(key) {
+                        var url = window.location.href;
+                        var pattern = new RegExp('[?&]*' + key + '=([^&]+)');
+                        try {
+                            var value = url.match(pattern)[1];
+                            return value;
+                        } catch (err) {
+                            return '';
+                        }
                     }
                 }
             });

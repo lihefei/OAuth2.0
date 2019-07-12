@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>公共平台应用</title>
+        <title>用户管理-公共平台应用</title>
     </head>
     <body>
         <style>
@@ -30,7 +30,7 @@
                 color: red;
             }
 
-            .application-box {
+            .user-box {
                 width: 980px;
                 margin: 50px auto;
                 padding: 20px 50px;
@@ -38,36 +38,36 @@
                 border-radius: 4px;
                 box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
             }
-            .application-box ul {
+            .user-box ul {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
             }
 
-            .application-box ul li {
+            .user-box ul li {
                 flex-basis: 48%;
             }
 
-            .application-box h2 {
+            .user-box h2 {
                 color: #333;
                 text-align: center;
             }
 
-            .application-box dl,
-            .application-box .btn-add {
+            .user-box dl,
+            .user-box .btn-add {
                 margin: 15px 0;
                 padding: 20px;
                 border: 1px solid #ddd;
                 border-radius: 4px;
                 background-color: #fdfdfd;
             }
-            .application-box dl dt {
+            .user-box dl dt {
                 position: relative;
                 margin-bottom: 10px;
                 font-weight: bold;
             }
 
-            .application-box dt time {
+            .user-box dt time {
                 position: absolute;
                 top: 50%;
                 right: 0;
@@ -76,7 +76,7 @@
                 font-size: 12px;
             }
 
-            .application-box .operate {
+            .user-box .operate {
                 display: none;
                 position: absolute;
                 top: 0;
@@ -87,27 +87,27 @@
                 text-align: right;
                 background-color: #fdfdfd;
             }
-            .application-box dl:hover .operate {
+            .user-box dl:hover .operate {
                 display: block;
             }
 
-            .application-box .operate a {
+            .user-box .operate a {
                 display: inline-block;
                 margin-left: 5px;
                 cursor: pointer;
             }
 
-            .application-box dl dd {
+            .user-box dl dd {
                 font-size: 14px;
                 color: #666;
             }
 
-            .application-box .btn-add {
+            .user-box .btn-add {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 font-size: 32px;
-                line-height: 92px;
+                line-height: 112px;
                 color: #bbb;
                 background-color: #fff;
                 cursor: pointer;
@@ -218,22 +218,20 @@
             }
         </style>
         <div id="app">
-            <div class="application-box">
-                <h2>应用列表</h2>
+            <div class="user-box">
+                <h2>用户列表</h2>
                 <ul>
                     <li v-for="item in list">
                         <dl>
                             <dt>
-                                {{ item.appName }}
+                                {{ item.name }}
                                 <time>{{ item.createTime }}</time>
                                 <div class="operate"><a @click="edit(item)">编辑</a>&emsp;<a @click="del(item)">删除</a></div>
                             </dt>
-                            <dd><strong>所属用户: </strong>{{ item.user }}</dd>
-                            <dd><strong>client_id: </strong>{{ item.client_id }}</dd>
-                            <dd>
-                                <strong>client_secret: </strong>
-                                {{ item.client_secret }}
-                            </dd>
+                            <dd><strong>帐号: </strong>{{ item.name }}</dd>
+                            <dd><strong>密码: </strong>{{ item.pswd }}</dd>
+                            <dd><strong>电话: </strong>{{ item.phone }}</dd>
+                            <dd><strong>邮箱: </strong>{{ item.email }}</dd>
                         </dl>
                     </li>
 
@@ -252,13 +250,13 @@
                         <div v-if="dialog.btn.save" class="add-box">
                             <form action="">
                                 <p>
-                                    <label for="appName"><span class="c-red">*</span>应用名称</label>
-                                    <input type="text" id="appName" v-model="currentApp.appName" />
+                                    <label for="name"><span class="c-red">*</span>帐号</label> <input type="text" id="name" v-model="currentUser.name" :disabled="isDisabled" />
                                 </p>
                                 <p>
-                                    <label for="description">描述</label>
-                                    <textarea id="description" v-model="currentApp.description"></textarea>
+                                    <label for="password"><span class="c-red">*</span>密码</label> <input type="text" id="password" v-model="currentUser.pswd" :disabled="isDisabled" />
                                 </p>
+                                <p><label for="phone">电话</label> <input type="text" id="phone" v-model="currentUser.phone" /></p>
+                                <p><label for="email">邮箱</label> <input type="email" id="email" v-model="currentUser.email" /></p>
                             </form>
                         </div>
                         <div v-if="dialog.btn.delete" class="del-box">
@@ -274,6 +272,7 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
         <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+        <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
         <script>
             const vm = new Vue({
                 el: '#app',
@@ -281,7 +280,7 @@
                     return {
                         list: [],
                         dialog: {
-                            title: '添加应用',
+                            title: '添加用户',
                             saveType: 'add',
                             show: false,
                             btn: {
@@ -290,11 +289,13 @@
                                 delete: false
                             }
                         },
-                        currentApp: {
-                            appName: '',
-                            description: '',
-                            user: ''
-                        }
+                        currentUser: {
+                            name: '',
+                            pswd: '',
+                            phone: '',
+                            email: ''
+                        },
+                        isDisabled: false
                     };
                 },
                 created() {
@@ -304,31 +305,21 @@
                 methods: {
                     save() {
                         const that = this;
-                        if (!that.currentApp.appName) {
-                            alert('名称不能为空');
+                        if (!(that.currentUser.name && that.currentUser.pswd)) {
+                            alert('账号或密码不能为空');
                             return;
                         }
 
-                        if (this.dialog.saveType === 'add' && !this.currentApp.user) {
-                            alert('user参数不能为空');
-                            return;
-                        }
-
-                        let url = '/api/application/add';
-                        let data = {
-                            appName: that.currentApp.appName,
-                            description: that.currentApp.description,
-                            user: that.currentApp.user
-                        };
+                        let url = '/api/user/register';
+                        let data = that.currentUser;
 
                         if (this.dialog.saveType === 'edit') {
-                            url = '/api/application/edit';
-                            data.client_id = this.currentApp.client_id;
+                            url = '/api/user/edit';
                         }
 
                         if (this.dialog.saveType === 'del') {
-                            url = '/api/application/del';
-                            data.client_id = this.currentApp.client_id;
+                            url = '/api/user/del';
+                            data = { name: that.currentUser.name };
                         }
 
                         axios.post(url, data).then(function(response) {
@@ -344,7 +335,7 @@
                     },
                     reset() {
                         this.dialog = {
-                            title: '添加应用',
+                            title: '添加用户',
                             saveType: 'add',
                             show: false,
                             btn: {
@@ -353,23 +344,29 @@
                                 delete: false
                             }
                         };
-                        this.currentApp = {};
+                        this.currentUser = {
+                            name: '',
+                            pswd: '',
+                            phone: '',
+                            email: ''
+                        };
+                        this.isDisabled = false;
                     },
                     add() {
                         this.dialog.show = true;
                         this.dialog.saveType = 'add';
-                        this.currentApp.user = this.getParam('user');
                     },
                     edit(obj) {
-                        this.dialog.title = '编辑应用';
+                        this.dialog.title = '编辑用户';
                         this.dialog.show = true;
-                        this.currentApp = Object.assign({}, obj);
+                        this.currentUser = Object.assign({}, obj);
                         this.dialog.saveType = 'edit';
+                        this.isDisabled = true;
                     },
                     del(obj) {
-                        this.dialog.title = '删除';
+                        this.dialog.title = '删除用户';
                         this.dialog.show = true;
-                        this.currentApp = Object.assign({}, obj);
+                        this.currentUser = Object.assign({}, obj);
                         this.dialog.saveType = 'del';
                         this.dialog.btn.delete = true;
                         this.dialog.btn.save = false;
@@ -377,7 +374,7 @@
                     update() {
                         const that = this;
                         axios
-                            .get('/api/application/list')
+                            .get('/api/user/list')
                             .then(function(response) {
                                 that.list = JSON.parse(response.data.data);
                             })
@@ -387,16 +384,6 @@
                             .finally(function() {
                                 // always executed
                             });
-                    },
-                    getParam(key) {
-                        var url = window.location.href;
-                        var pattern = new RegExp('[?&]*' + key + '=([^&]+)');
-                        try {
-                            var value = url.match(pattern)[1];
-                            return value;
-                        } catch (err) {
-                            return '';
-                        }
                     }
                 }
             });
