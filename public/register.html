@@ -75,14 +75,25 @@
             <h2>公共平台注册</h2>
             <form id="registerForm" action="">
                 <p>
-                    <label for="name"><span class="c-red">*</span>帐号</label> <input type="text" id="name" />
+                    <label for="name"><span class="c-red">*</span>帐号</label>
+                    <input type="text" id="name" />
                 </p>
                 <p>
-                    <label for="password"><span class="c-red">*</span>密码</label> <input type="text" id="password" />
+                    <label for="password"><span class="c-red">*</span>密码</label>
+                    <input type="text" id="password" />
                 </p>
-                <p><label for="phone">电话</label> <input type="text" id="phone" /></p>
-                <p><label for="email">邮箱</label> <input type="email" id="email" /></p>
-                <p><label></label> <button type="button" id="submitBtn">注册</button>&emsp;<a href="login.html">返回登录</a></p>
+                <p>
+                    <label for="phone">电话</label>
+                    <input type="text" id="phone" />
+                </p>
+                <p>
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" />
+                </p>
+                <p>
+                    <label></label>
+                    <button type="button" id="submitBtn">注册</button>&emsp;<a href="login.html">返回登录</a>
+                </p>
             </form>
         </div>
         <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
@@ -98,7 +109,6 @@
                     phone: document.getElementById('phone').value,
                     email: document.getElementById('email').value
                 };
-                data.createTime =
 
                 if (!(data.name && data.pswd)) {
                     alert('账号或密码不能为空');

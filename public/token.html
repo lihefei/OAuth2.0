@@ -203,7 +203,9 @@
                             <dt>
                                 {{ item.appName }}
                                 <time>{{ item.createTime }}</time>
-                                <div class="operate"><a @click="del(item)">删除</a></div>
+                                <div class="operate">
+                                    <a @click="del(item)">删除</a>
+                                </div>
                             </dt>
                             <dd><strong>所属应用: </strong>{{ item.appName }}</dd>
                             <dd><strong>所属用户: </strong>{{ item.user }}</dd>
@@ -225,8 +227,12 @@
                         </div>
                     </div>
                     <div class="dialog-footer">
-                        <button class="dialog-btn dialog-btn-primary" type="button" @click="save">删除</button>
-                        <button class="dialog-btn dialog-btn-default" type="button" @click="cancel">取消</button>
+                        <button class="dialog-btn dialog-btn-primary" type="button" @click="save">
+                            删除
+                        </button>
+                        <button class="dialog-btn dialog-btn-default" type="button" @click="cancel">
+                            取消
+                        </button>
                     </div>
                 </div>
             </div>
@@ -296,7 +302,6 @@
                         const that = this;
                         const tokenListResult = await this.getTokenList();
                         const list = JSON.parse(tokenListResult);
-                        let flag = false;
 
                         for (let i = 0; i < list.length; i++) {
                             let client_id = list[i].client_id;
@@ -305,12 +310,7 @@
                                 if (appList[j].client_id === client_id) {
                                     list[i].appName = appList[j].appName;
                                     list[i].user = appList[j].user;
-                                    flag = true;
-                                    break;
                                 }
-                            }
-                            if (flag) {
-                                break;
                             }
                         }
 
